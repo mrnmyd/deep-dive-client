@@ -1,12 +1,12 @@
-export type TopicStatus = "not_started" | "in_progress" | "done" | "needs_review"
+export type TopicStatus = 'not_started' | 'in_progress' | 'done' | 'needs_review'
 
-export type ProblemStatus = "unsolved" | "attempted" | "solved" | "needs_retry"
+export type ProblemStatus = 'unsolved' | 'attempted' | 'solved' | 'needs_retry'
 
-export type StudyBlockId = "dsa" | "theory" | "revision" | "build"
+export type StudyBlockId = 'dsa' | 'theory' | 'revision' | 'build'
 
-export type PaperColor = "purple" | "teal" | "blue" | "amber" | "gray"
+export type PaperColor = 'purple' | 'teal' | 'blue' | 'amber' | 'gray'
 
-export type TopicPriority = "high" | "medium" | "low"
+export type TopicPriority = 'high' | 'medium' | 'low'
 
 export type Topic = {
   id: string
@@ -34,7 +34,7 @@ export type Paper = {
 export type Problem = {
   id: string
   title: string
-  difficulty: "Easy" | "Medium" | "Hard"
+  difficulty: 'Easy' | 'Medium' | 'Hard'
   pattern: string
   week: number
   leetcodeUrl: string
@@ -75,9 +75,10 @@ export type DailyLogEntry = {
 export type Settings = {
   userName: string
   dailyGoalMins: number
-  theme: "light" | "dark" | "system"
+  theme: 'light' | 'dark' | 'system'
   startDate: string
   currentPaper: string
+  lastReadTopicId?: string
 }
 
 export type Streaks = {
@@ -86,6 +87,27 @@ export type Streaks = {
   lastActiveDate: string | null
 }
 
+export type ActiveSession = {
+  startedAtIso: string
+  totalMs: number
+  resumedAt: number | null
+  paperMs: Record<string, number>
+  currentPaperId: string | null
+  currentTopicId: string | null
+  paperChunkStart: number | null
+  startedAsReview: boolean
+}
+
 export type TopicProgressMap = Record<string, TopicProgress>
 export type ProblemProgressMap = Record<string, ProblemProgress>
 export type DailyLogMap = Record<string, DailyLogEntry>
+export type TopicNotesMap = Record<string, string>
+
+export type BackupConfig = {
+  intervalMinutes: number
+  keepLast: number
+  lastBackupAt: string | null
+  lastBackupHash: string | null
+  lastBackupFilename: string | null
+  lastFolderName: string | null
+}

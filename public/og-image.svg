@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E1B4B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#0D9488"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="80" y="120" width="80" height="8" rx="4" fill="url(#accent)"/>
+  <text x="80" y="240" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="92" font-weight="700" fill="#F8FAFC" letter-spacing="-2">PrepTracker</text>
+  <text x="80" y="320" font-family="ui-serif, Georgia, serif" font-size="42" font-style="italic" fill="#CBD5E1">A reader-first study portal.</text>
+  <text x="80" y="380" font-family="ui-serif, Georgia, serif" font-size="32" fill="#94A3B8">Syllabus. DSA. Sessions. Progress. All local.</text>
+  <g transform="translate(80,470)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="500">
+    <rect x="0" y="0" width="220" height="44" rx="22" fill="#7C3AED"/>
+    <text x="110" y="29" text-anchor="middle" fill="#F8FAFC">DSA</text>
+    <rect x="240" y="0" width="220" height="44" rx="22" fill="#0D9488"/>
+    <text x="350" y="29" text-anchor="middle" fill="#F8FAFC">Backend</text>
+    <rect x="480" y="0" width="220" height="44" rx="22" fill="#2563EB"/>
+    <text x="590" y="29" text-anchor="middle" fill="#F8FAFC">Frontend</text>
+    <rect x="720" y="0" width="220" height="44" rx="22" fill="#D97706"/>
+    <text x="830" y="29" text-anchor="middle" fill="#F8FAFC">System Design</text>
+  </g>
+  <text x="80" y="580" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" fill="#64748B">Senior Developer Interview Prep · Local-first · v2</text>
+</svg>

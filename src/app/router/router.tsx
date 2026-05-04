@@ -1,52 +1,84 @@
-import { ROUTES } from "@/constants/routes.constant"
-import { PrepTrackerLayout } from "@/features/preptracker/components/preptracker-layout"
-import { DashboardPage } from "@/features/preptracker/pages/DashboardPage"
-import { ProblemsPage } from "@/features/preptracker/pages/ProblemsPage"
-import { ProgressPage } from "@/features/preptracker/pages/ProgressPage"
-import { SettingsPage } from "@/features/preptracker/pages/SettingsPage"
-import { StudySessionPage } from "@/features/preptracker/pages/StudySessionPage"
-import { SyllabusPage } from "@/features/preptracker/pages/SyllabusPage"
-import NotFoundPage from "@/pages/NotFoundPage"
-import { createBrowserRouter } from "react-router-dom"
+import { Suspense, lazy } from 'react'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
+import { ROUTES } from '@/constants/routes.constant'
+import { RootLayout } from '@/app/router/RootLayout'
+import { ReaderPage } from '@/features/preptracker/components/reader/ReaderPage'
+import { PrepTrackerLayout } from '@/features/preptracker/components/preptracker-layout'
+import NotFoundPage from '@/pages/NotFoundPage'
+
+const DashboardPage = lazy(() =>
+  import('@/features/preptracker/pages/DashboardPage').then((mod) => ({
+    default: mod.DashboardPage,
+  }))
+)
+const ProblemsPage = lazy(() =>
+  import('@/features/preptracker/pages/ProblemsPage').then((mod) => ({ default: mod.ProblemsPage }))
+)
+const ProgressPage = lazy(() =>
+  import('@/features/preptracker/pages/ProgressPage').then((mod) => ({ default: mod.ProgressPage }))
+)
+const SettingsPage = lazy(() =>
+  import('@/features/preptracker/pages/SettingsPage').then((mod) => ({ default: mod.SettingsPage }))
+)
+
+const fallback = (label: string) => (
+  <div
+    className="flex min-h-[40vh] items-center justify-center text-sm text-muted-foreground"
+    role="status"
+    aria-live="polite"
+  >
+    Loading {label}…
+  </div>
+)
 
 const router = createBrowserRouter([
-    {
+  {
+    element: <RootLayout />,
+    children: [
+      { path: ROUTES.READER, element: <ReaderPage /> },
+      {
         element: <PrepTrackerLayout />,
         children: [
-            {
-                path: ROUTES.ROOT,
-                element: <DashboardPage />,
-            },
-            {
-                path: ROUTES.SYLLABUS,
-                element: <SyllabusPage />,
-            },
-            {
-                path: ROUTES.SYLLABUS_DETAIL,
-                element: <SyllabusPage />,
-            },
-            {
-                path: ROUTES.PROBLEMS,
-                element: <ProblemsPage />,
-            },
-            {
-                path: ROUTES.STUDY,
-                element: <StudySessionPage />,
-            },
-            {
-                path: ROUTES.PROGRESS,
-                element: <ProgressPage />,
-            },
-            {
-                path: ROUTES.SETTINGS,
-                element: <SettingsPage />,
-            },
-            {
-                path: ROUTES.NOT_FOUND,
-                element: <NotFoundPage />,
-            },
-        ]
-    },
+          {
+            path: ROUTES.DASHBOARD,
+            element: (
+              <Suspense fallback={fallback('Dashboard')}>
+                <DashboardPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: ROUTES.PROBLEMS,
+            element: (
+              <Suspense fallback={fallback('Problems')}>
+                <ProblemsPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: ROUTES.PROGRESS,
+            element: (
+              <Suspense fallback={fallback('Progress')}>
+                <ProgressPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: ROUTES.SETTINGS,
+            element: (
+              <Suspense fallback={fallback('Settings')}>
+                <SettingsPage />
+              </Suspense>
+            ),
+          },
+        ],
+      },
+      { path: ROUTES.STUDY, element: <Navigate to={ROUTES.READER} replace /> },
+      { path: ROUTES.SYLLABUS, element: <Navigate to={ROUTES.READER} replace /> },
+      { path: ROUTES.SYLLABUS_DETAIL, element: <Navigate to={ROUTES.READER} replace /> },
+      { path: ROUTES.NOT_FOUND, element: <NotFoundPage /> },
+    ],
+  },
 ])
 
 export default router

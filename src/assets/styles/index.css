@@ -1,7 +1,7 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -127,5 +127,97 @@
 
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  .markdown-body {
+    font-family: ui-serif, Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--foreground);
+  }
+  .markdown-body > :first-child {
+    margin-top: 0;
+  }
+  .markdown-body > :last-child {
+    margin-bottom: 0;
+  }
+  .markdown-body p {
+    margin: 1rem 0;
+  }
+  .markdown-body ul,
+  .markdown-body ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  .markdown-body ul {
+    list-style: disc;
+  }
+  .markdown-body ol {
+    list-style: decimal;
+  }
+  .markdown-body li {
+    margin: 0.25rem 0;
+  }
+  .markdown-body li > p {
+    margin: 0;
+  }
+  .markdown-body h1 {
+    font-family: var(--font-sans);
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 600;
+    margin: 2rem 0 1rem;
+    letter-spacing: -0.01em;
+  }
+  .markdown-body h2 {
+    font-family: var(--font-sans);
+    font-size: 1.4rem;
+    line-height: 1.25;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.005em;
+  }
+  .markdown-body h3 {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    line-height: 1.3;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .markdown-body h4 {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+  }
+  .markdown-body strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+  .markdown-body em {
+    font-style: italic;
+  }
+  .markdown-body blockquote {
+    margin: 1.25rem 0;
+    padding: 0.5rem 1rem;
+    border-left: 3px solid var(--border);
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+  .markdown-body hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+  .markdown-body img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+  }
+  .markdown-body input[type='checkbox'] {
+    margin-right: 0.5rem;
   }
 }
