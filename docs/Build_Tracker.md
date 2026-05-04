@@ -431,6 +431,44 @@ Items intentionally deferred. Recorded so they are not lost.
 - Public sharing of read-only progress snapshots.
 - Spaced-repetition card review mode for needs_review topics.
 
+## Content depth tracker
+
+The first content audit (post-v2 push) found that all 13 module markdown files were primer-level — conceptual prose without code, complexity tables, interview Q&A, or worked examples. The expansion pass below brings the most interview-leveraged modules to senior depth and adds five missing modules. The remaining modules are flagged so future passes can finish them.
+
+**Deepened (code blocks, complexity tables, common pitfalls, interview Q&A):**
+
+- [x] `module_1_3_paradigms.md`
+- [x] `module_2_1_java.md`
+- [x] `module_4_1_scalable_systems.md`
+
+**New modules added (full senior-level depth from the start):**
+
+- [x] `module_1_4_advanced.md` — Union-Find / DSU, Segment Trees / Fenwick, Bit Manipulation, Greedy
+- [x] `module_2_4_testing.md` — Unit / Integration / Contract / Property / E2E / Load
+- [x] `module_4_3_distributed.md` — CAP / PACELC, consensus, idempotency, observability + RED + USE + SLO
+- [x] `module_4_4_practice.md` — Capacity estimation + walkthroughs (URL shortener, chat, news feed, rate limiter) + senior playbook
+- [x] `module_6_1_behavioral.md` — STAR, scoping, leadership, disagreement, failure stories
+
+**Still primer-level (TBD):**
+
+- [ ] `module_1_1_linear.md`
+- [ ] `module_1_2_non_linear.md`
+- [ ] `module_2_2_spring.md`
+- [ ] `module_2_3_databases.md`
+- [ ] `module_3_1_react_internals.md`
+- [ ] `module_3_2_state_perf.md`
+- [ ] `module_3_3_ts_tools.md`
+- [ ] `module_4_2_patterns.md`
+- [ ] `module_5_1_infra.md`
+- [ ] `module_5_2_ai_cloud.md`
+
+**Syllabus additions (in `data/syllabus.ts`):**
+
+- [x] Paper 1: added `module_1_4_advanced` and `topic_greedy` under module 1.3.
+- [x] Paper 2: added `module_2_4_testing` with three topics.
+- [x] Paper 4: added `module_4_3_distributed` and `module_4_4_practice` with eight new topics total.
+- [x] New paper 6 "Senior Skills & Behavioral" with `module_6_1_behavioral` and five topics.
+
 ---
 
 ## Risk log

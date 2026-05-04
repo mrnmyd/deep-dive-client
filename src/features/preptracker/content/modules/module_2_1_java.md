@@ -1,56 +1,229 @@
 # Advanced Java
 
-Senior Java interviews test whether you understand how Java behaves at runtime, not just syntax. Focus on memory, concurrency, collection internals, and modern language features.
+Senior Java interviews test runtime behaviour: memory model, concurrency, collection internals, and modern language features. Syntax recall is not enough.
 
 ## JVM: class loaders, memory, JIT, GC algorithms
 
-The JVM loads bytecode, verifies it, executes it, and optimizes hot paths. Class loaders form a delegation hierarchy: bootstrap, platform, application, and custom loaders. Delegation prevents duplicate loading of core classes and supports isolation in containers or app servers.
+The JVM loads bytecode, verifies it, executes it, and optimises hot paths.
 
-Memory areas matter for debugging. The stack stores method frames, local variables, and references. The heap stores objects. Metaspace stores class metadata. Native memory is outside the Java heap and can still cause process-level memory pressure.
+**Class loaders** form a delegation hierarchy: bootstrap → platform → application → custom. Delegation prevents duplicate loading of core classes and supports isolation in containers, app servers, or plugin systems.
 
-JIT compilation identifies hot methods and compiles bytecode into optimized machine code. This is why JVM performance can improve after warmup. Escape analysis may remove allocations or enable scalar replacement.
+**Memory areas**
 
-Garbage collectors differ by goal:
+| Area               | Holds                             | Lifetime            |
+| ------------------ | --------------------------------- | ------------------- |
+| Stack (per thread) | Method frames, locals, references | Lives with the call |
+| Heap               | All objects                       | GC-managed          |
+| Metaspace          | Class metadata, method bytecode   | Until class unload  |
+| Code cache         | JIT-compiled native code          | JIT-managed         |
+| Native memory      | Direct buffers, JNI allocations   | Outside Java heap   |
 
-- Serial GC is simple and stop-the-world.
-- Parallel GC optimizes throughput.
-- G1 splits heap into regions and targets predictable pauses.
-- ZGC and Shenandoah focus on very low pause times.
+OutOfMemoryError can come from any of these. `Metaspace` errors usually indicate classloader leaks (often from frameworks or hot-redeploys).
 
-In interviews, connect GC to real systems: latency-sensitive APIs care about pause time; batch jobs often care more about throughput.
+**JIT compilation** identifies hot methods (counter-based) and compiles bytecode to optimised machine code. Tiered compilation (C1 then C2) balances startup with peak. Escape analysis can stack-allocate or scalarise objects.
 
-## Multithreading: JMM, locks, synchronizers, ThreadLocal, virtual threads
+**GC algorithms**
 
-The Java Memory Model defines visibility and ordering. Without a happens-before relationship, one thread may not see another thread's writes when you expect.
+| Collector        | Goal                    | When to choose             |
+| ---------------- | ----------------------- | -------------------------- |
+| Serial           | Simple, single-threaded | Tiny services, single-core |
+| Parallel         | Throughput              | Batch jobs, no latency SLO |
+| G1               | Predictable pauses      | Default modern choice      |
+| ZGC / Shenandoah | Sub-millisecond pauses  | Latency-sensitive APIs     |
 
-`volatile` gives visibility and ordering for a variable, but it does not make compound operations atomic. `synchronized` provides mutual exclusion and establishes happens-before between unlock and subsequent lock. `ReentrantLock` provides explicit locking, try-lock, interruptible lock acquisition, and conditions.
+**Tuning intuition**
 
-Common synchronizers:
+- Long pauses with G1: increase heap or reduce live set; check humongous allocations.
+- Frequent young-gen collections: enlarge young gen.
+- Always enable GC logging (`-Xlog:gc*`) before tuning. Do not change collectors without baseline numbers.
 
-- `Semaphore` controls permits.
-- `CountDownLatch` waits until a count reaches zero.
-- `CyclicBarrier` lets a fixed group meet repeatedly.
-- `ThreadLocal` stores per-thread state, but can leak in thread pools if not removed.
-- `ForkJoinPool` supports work stealing for recursive parallel tasks.
+---
 
-Virtual threads make blocking code cheaper by decoupling Java tasks from OS threads. They are excellent for high-concurrency blocking IO, but they do not make CPU-bound work faster.
+## Multithreading
 
-## Collections: HashMap, ConcurrentHashMap, CopyOnWriteArrayList, BlockingQueue
+The Java Memory Model defines visibility and ordering across threads. Without a **happens-before** relationship, one thread may not see another thread's writes when you expect.
 
-`HashMap` stores buckets by hash. In modern JDKs, long collision chains can treeify into red-black trees. Important points: keys need stable `equals` and `hashCode`, iteration order is not guaranteed, and it is not thread-safe.
+**Visibility primitives**
 
-`ConcurrentHashMap` supports concurrent access with finer-grained synchronization and lock-free reads in many cases. It does not allow null keys or values, which avoids ambiguity in concurrent reads.
+| Tool                 | Provides                                    | Doesn't provide                               |
+| -------------------- | ------------------------------------------- | --------------------------------------------- |
+| `volatile`           | Visibility, ordering of single read/write   | Atomicity of compound ops                     |
+| `synchronized`       | Mutual exclusion + visibility               | Try-lock, fairness, conditions                |
+| `ReentrantLock`      | Above + try-lock, interruptible, conditions | Auto-release on exception (use `try/finally`) |
+| `AtomicInteger` etc. | Atomic CAS without locks                    | Composite invariants across multiple atomics  |
 
-`CopyOnWriteArrayList` copies the backing array on mutation. It is good for many reads and rare writes, such as listener lists. It is bad for frequent writes.
+**Common bug: double-checked locking, fixed**
 
-`BlockingQueue` coordinates producers and consumers. Use bounded queues to apply backpressure; unbounded queues can hide overload until memory fails.
+```java
+class Singleton {
+    private static volatile Singleton instance;        // volatile is required
 
-## Modern Java: lambdas, streams, Optional, records, sealed classes, pattern matching
+    public static Singleton get() {
+        Singleton local = instance;
+        if (local == null) {
+            synchronized (Singleton.class) {
+                local = instance;
+                if (local == null) {
+                    local = new Singleton();
+                    instance = local;
+                }
+            }
+        }
+        return local;
+    }
+}
+```
 
-Lambdas let behavior be passed as values. Streams express transformations, filtering, grouping, and reductions. They are best for clear data pipelines, not every loop.
+Without `volatile`, another thread can observe a partially constructed object because the assignment to `instance` can be reordered relative to the constructor.
 
-`Optional` models possible absence in return values. Avoid using it for fields or parameters unless there is a strong reason.
+**Synchronizers**
 
-Records are concise immutable data carriers with generated constructor, accessors, equals, hashCode, and toString. Sealed classes restrict which classes can extend a type, helping model finite hierarchies.
+```java
+CountDownLatch start = new CountDownLatch(1);
+CountDownLatch done  = new CountDownLatch(workers);
 
-Pattern matching reduces boilerplate when checking and extracting types. The senior-level answer is to use these features where they improve domain clarity without hiding complexity.
+for (int i = 0; i < workers; i++) {
+    new Thread(() -> {
+        try { start.await(); } catch (InterruptedException e) { ... }
+        // do work
+        done.countDown();
+    }).start();
+}
+start.countDown();   // release all workers at once
+done.await();        // wait for all to finish
+```
+
+| Synchronizer     | Use                                                     |
+| ---------------- | ------------------------------------------------------- |
+| `Semaphore`      | Limit concurrent access to a resource                   |
+| `CountDownLatch` | Wait for N events, single-use                           |
+| `CyclicBarrier`  | Repeating rendezvous of N threads                       |
+| `Phaser`         | Like CyclicBarrier but parties can register/deregister  |
+| `ThreadLocal`    | Per-thread state — call `remove()` in pools or you leak |
+| `ForkJoinPool`   | Work-stealing pool for recursive parallelism            |
+
+**Virtual threads (JDK 21+)** unmount from the carrier thread on blocking calls, so blocking IO is cheap. Create them eagerly:
+
+```java
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    var futures = orders.stream()
+        .map(o -> executor.submit(() -> process(o)))
+        .toList();
+    for (var f : futures) f.get();
+}
+```
+
+Virtual threads do **not** make CPU-bound work faster — those still need a small platform-thread pool.
+
+**Common pitfalls**
+
+- `synchronized` self-invocation does not deadlock (locks are reentrant) but `@Transactional` does not apply across self-invocation because the proxy is bypassed.
+- `ThreadLocal` in pooled threads leaks unless you call `remove()` in a `finally` block.
+- Holding locks while calling user code (callbacks) invites deadlocks.
+
+---
+
+## Collections internals
+
+**HashMap**
+
+- Buckets indexed by `hash(key) & (capacity - 1)` (capacity is always a power of two).
+- Collisions stored in a singly linked list; once a bucket reaches the **treeify threshold** (8 entries with capacity ≥ 64), it converts to a red-black tree, dropping worst-case to `O(log n)`.
+- Resizing doubles capacity; entries either stay in the same bucket or move to `bucket + oldCapacity`.
+- **Not thread-safe.** Concurrent mutation can produce a corrupted bucket chain or an infinite loop in older JDKs.
+
+**ConcurrentHashMap**
+
+- Lock-free reads in most cases.
+- Mutations lock per-bucket (CAS for empty, `synchronized` on the head node otherwise).
+- Bulk operations (`forEach`, `reduce`) accept a parallelism threshold.
+- **No null keys or values** — null would be ambiguous in concurrent reads.
+
+**CopyOnWriteArrayList**
+
+- Mutations copy the entire backing array. Reads are wait-free.
+- Use for tiny, read-heavy collections (listener lists). Wrong for frequent writes — every `add` is `O(n)`.
+
+**BlockingQueue**
+
+```java
+BlockingQueue<Task> queue = new ArrayBlockingQueue<>(1000);
+
+// producer
+queue.put(task);                       // blocks if full → backpressure
+
+// consumer
+Task task = queue.take();              // blocks if empty
+```
+
+Use a bounded queue. Unbounded queues hide overload until memory fails.
+
+---
+
+## Modern Java
+
+**Streams**
+
+```java
+Map<Department, List<Employee>> byDept = employees.stream()
+    .filter(e -> e.salary() > 50_000)
+    .collect(groupingBy(Employee::department));
+
+double averageBySeniority = employees.stream()
+    .collect(averagingDouble(e -> e.tenureYears()));
+```
+
+Streams are best for clear pipelines. Imperative code is sometimes clearer; do not force a stream.
+
+**Optional**
+
+```java
+return repo.findById(id)
+    .filter(Order::isActive)
+    .map(this::toDto)
+    .orElseThrow(() -> new NotFoundException(id));
+```
+
+Use `Optional` as a return type to communicate possible absence. Avoid as a field, parameter, or in collections — `null` plus a `@Nullable` annotation reads better.
+
+**Records, sealed classes, pattern matching**
+
+```java
+sealed interface Result<T> permits Ok, Err {}
+record Ok<T>(T value) implements Result<T> {}
+record Err<T>(String message) implements Result<T> {}
+
+String describe(Result<Integer> r) {
+    return switch (r) {
+        case Ok<Integer> ok    -> "ok: " + ok.value();
+        case Err<Integer> err  -> "err: " + err.message();
+    };
+}
+```
+
+Sealed types make exhaustiveness real. The compiler enforces that every subtype is handled in a switch.
+
+---
+
+## Common pitfalls
+
+- Catching `InterruptedException` and ignoring it. At minimum, restore the flag with `Thread.currentThread().interrupt()`.
+- Using `==` instead of `equals` on `Long`, `Integer` etc. above the cache range (-128 to 127). Always use `equals` for boxed numbers.
+- Forgetting to close resources. Use try-with-resources for `AutoCloseable`.
+- Mutating shared `HashMap` from multiple threads. Replace with `ConcurrentHashMap`.
+
+---
+
+## Interview answers
+
+_Q: Difference between `synchronized` and `ReentrantLock`?_
+A: `synchronized` is simpler, automatically released on exception, and supports condition variables only via `wait/notify` on the lock object. `ReentrantLock` adds try-lock with timeout, interruptible acquisition, fairness, multiple `Condition` instances, and explicit lock/unlock. Use `synchronized` by default; switch when you need its specific features.
+
+_Q: How does `ConcurrentHashMap` work without a global lock?_
+A: It splits writes per-bucket. An empty bucket gets a CAS install. A non-empty bucket synchronises on the head node so only one writer touches that chain at a time. Resizing is collaborative — multiple threads help migrate entries to a new table.
+
+_Q: When would you reach for a virtual thread?_
+A: Blocking IO at high concurrency. A REST handler that calls a database and a third-party API spends most of its time waiting. With virtual threads, the carrier pool stays small and you can run tens of thousands concurrently. Avoid for CPU-bound work — use a small fixed-size platform-thread pool.
+
+_Q: How would you debug a `ThreadLocal` leak?_
+A: Take a heap dump under load. Look for unusually large `Thread[]`-rooted retention paths into the leaking class. The culprit is almost always a thread-pool thread holding a reference set in the prior request that nobody cleared.
