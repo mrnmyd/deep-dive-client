@@ -3,9 +3,10 @@ import { CheckCircle2, Clock, PlayCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import { MarkdownContent } from "@/features/preptracker/components/markdown-content"
 import { useDailyLog, useTopicProgress } from "@/features/preptracker/hooks/usePrepTracker"
 import { PageHeader, ProgressBar, StatusBadge } from "@/features/preptracker/components/ui-helpers"
-import { getAllModules, getTopicStudyContent, type ModuleWithContext } from "@/features/preptracker/utils/study-content"
+import { getAllModules, getModuleStudyGuide, type ModuleWithContext } from "@/features/preptracker/utils/study-content"
 import { topicTone } from "@/features/preptracker/utils/status-styles"
 
 const SESSION_SECONDS = 90 * 60
@@ -158,48 +159,36 @@ function StudyMaterial({
             <p className="text-sm text-muted-foreground">{module.paper.title}</p>
           </CardHeader>
           <CardContent className="space-y-5">
-            {module.topics.map((topic) => {
-              const content = getTopicStudyContent(topic, module)
-              const status = getTopicStatus(topic.id)
+            <MarkdownContent content={getModuleStudyGuide(module.id)} />
 
-              return (
-                <article key={topic.id} className="rounded-lg border p-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <h2 className="text-lg font-semibold">{topic.title}</h2>
-                      <p className="mt-1 text-sm text-muted-foreground">{content.objective}</p>
+            <div className="rounded-lg border bg-muted/20 p-4">
+              <h3 className="font-semibold">Completion Checklist</h3>
+              <div className="mt-3 space-y-3">
+                {module.topics.map((topic) => {
+                  const status = getTopicStatus(topic.id)
+
+                  return (
+                    <div key={topic.id} className="flex flex-col gap-3 rounded-lg border bg-background p-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="font-medium">{topic.title}</p>
+                        <p className="text-xs text-muted-foreground">{topic.estimatedHours}h · {topic.tags.join(", ")}</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <StatusBadge label={status.replace("_", " ")} tone={topicTone[status]} />
+                        <Button size="sm" variant={status === "done" ? "outline" : "default"} onClick={() => onMarkDone(topic.id)}>
+                          <CheckCircle2 className="h-4 w-4" />
+                          {status === "done" ? "Completed" : "Mark complete"}
+                        </Button>
+                      </div>
                     </div>
-                    <StatusBadge label={status.replace("_", " ")} tone={topicTone[status]} />
-                  </div>
-
-                  <div className="mt-4 grid gap-4 lg:grid-cols-3">
-                    <StudyList title="Core Study Material" items={content.essentials} />
-                    <StudyList title="Interview Checkpoints" items={content.checkpoints} />
-                    <StudyList title="Active Practice" items={content.practice} />
-                  </div>
-
-                  <Button className="mt-4" variant={status === "done" ? "outline" : "default"} onClick={() => onMarkDone(topic.id)}>
-                    <CheckCircle2 className="h-4 w-4" />
-                    {status === "done" ? "Completed" : "Mark topic complete"}
-                  </Button>
-                </article>
-              )
-            })}
+                  )
+                })}
+              </div>
+            </div>
           </CardContent>
         </Card>
       ))}
     </div>
-  )
-}
-
-function StudyList({ title, items }: { title: string; items: string[] }) {
-  return (
-    <section>
-      <h3 className="text-sm font-semibold">{title}</h3>
-      <ul className="mt-2 space-y-2 text-sm text-muted-foreground">
-        {items.map((item) => <li key={item}>- {item}</li>)}
-      </ul>
-    </section>
   )
 }
 

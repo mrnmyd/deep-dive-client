@@ -126,6 +126,7 @@ src/
 │   └── data-table/       # reusable TanStack table wrapper
 ├── features/preptracker/
 │   ├── components/       # PrepTracker layout and shared UI helpers
+│   ├── content/modules/  # editable markdown study guides, one file per syllabus module
 │   ├── data/             # typed seed data for syllabus and problems
 │   ├── hooks/            # localStorage and PrepTracker domain hooks
 │   ├── pages/            # Dashboard, Study Session, Syllabus, Problems, Progress, Settings
@@ -138,6 +139,12 @@ The original JSON-file requirement is represented as typed seed modules:
 
 - `src/features/preptracker/data/syllabus.ts`
 - `src/features/preptracker/data/problems.ts`
+
+Study material lives in editable markdown files:
+
+- `src/features/preptracker/content/modules/{moduleId}.md`
+
+The markdown file name must match the syllabus module ID. Study Session loads these files and renders them as the in-app study guide for the selected modules.
 
 This gives compile-time safety while preserving the same seeded-data behavior.
 
@@ -344,7 +351,7 @@ The core product experience. The user visits the portal, starts a session, selec
 **Required Components:**
 - **Module picker** — all modules grouped by paper, with a hard maximum of 3 selections
 - **Session timer** — visible countdown while studying
-- **Study reader** — in-app content for every selected topic
+- **Study reader** — renders editable markdown content for every selected module
 - **Topic completion action** — marks topic as `done` and writes activity to localStorage
 - **Session progress summary** — selected modules, timer, and completed topics
 
@@ -521,7 +528,7 @@ The application is built in 5 sequential phases. Each phase produces a working a
 - [x] Implement streak calculation logic
 - [x] Build Study Session page with max 3 module selection
 - [x] Add session timer
-- [x] Add first-pass in-app study material for selected topics
+- [x] Add first-pass in-app study material from editable markdown files
 - [x] Implement topic completion and activity logging to `pt_daily_log`
 - [x] Implement lightweight onboarding prompt for first-time users
 - [x] **Verify:** `npm run lint` and `npm run build` pass
@@ -533,7 +540,7 @@ The application is built in 5 sequential phases. Each phase produces a working a
 > **Goal:** The app becomes useful as the single place to study. Study content is deep enough to reduce tab crawling, and the Progress page gives honest visual feedback.
 
 - [x] Remove notes from the main route flow
-- [x] Add first-pass generated study sections for every topic
+- [x] Move study material into editable markdown files under `src/features/preptracker/content/modules`
 - [ ] Deepen each topic into complete curated study content with examples, diagrams where useful, and interview answers
 - [x] Build Progress page with activity heatmap, paper completion, topic status, and pattern coverage
 - [x] Implement GitHub-style activity heatmap using a lightweight CSS grid

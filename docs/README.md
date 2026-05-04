@@ -12,6 +12,7 @@ Key areas:
 - Router: `src/app/router/router.tsx`
 - Route constants: `src/constants/routes.constant.ts`
 - PrepTracker feature module: `src/features/preptracker`
+- Editable study content: `src/features/preptracker/content/modules`
 - Public layout: `src/components/layouts/public`
 - Admin layout and menu: `src/components/layouts/admin`
 - Auth feature: `src/features/auth`
@@ -23,6 +24,17 @@ Key areas:
 - Demo data table page: `src/features/data-table-demo`
 
 The public/admin/auth/demo template areas remain in the repository as reusable reference material, but the active product route tree now renders PrepTracker pages.
+
+## Study Content
+
+Study Session renders markdown files from `src/features/preptracker/content/modules`.
+
+Current convention:
+
+- One markdown file per syllabus module.
+- File name must match the module ID, for example `module_1_1_linear.md`.
+- React code loads these files with Vite raw markdown imports.
+- Edit the markdown files to improve explanations, examples, diagrams-as-text, interview answers, and practice prompts without changing page code.
 
 ## Documentation Plan
 
