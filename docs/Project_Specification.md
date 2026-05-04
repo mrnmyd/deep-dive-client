@@ -1,10 +1,10 @@
-# PrepTracker — Project Specification (v2)
+# DeepDive — Project Specification (v2)
 
 **Senior Developer Interview Preparation Portal**
 **Stack:** React 19 + TypeScript + Vite 7 + Tailwind CSS 4 + Zustand + localStorage
 **Hosting:** Vercel (zero-config from GitHub)
 **Audience:** A working full stack developer with limited time, preparing for a Senior role
-**Document Purpose:** The single source of truth for what PrepTracker is, how it behaves, what it stores, and how it is built.
+**Document Purpose:** The single source of truth for what DeepDive is, how it behaves, what it stores, and how it is built.
 
 This specification supersedes any prior project document. The syllabus content lives separately in [`Syllabus.md`](./Syllabus.md). This document does not duplicate that content; it references it.
 
@@ -45,9 +45,9 @@ This specification supersedes any prior project document. The syllabus content l
 
 ## 1. Vision and Philosophy
 
-PrepTracker is a single-screen, reader-first study portal. The user opens it and is studying. Tracking, analytics, problem practice, and session bookkeeping all exist in support of the reading experience, not in front of it.
+DeepDive is a single-screen, reader-first study portal. The user opens it and is studying. Tracking, analytics, problem practice, and session bookkeeping all exist in support of the reading experience, not in front of it.
 
-The product is for someone who has very little time outside of work and needs every interaction to push them toward the content rather than around it. The previous version of PrepTracker treated the application as a multi-page progress tracker that contained study material. The v2 specification inverts this: the application is a study reader that contains tracking. The reader is the home page, the default route, and the surface the user spends 95% of their time on.
+The product is for someone who has very little time outside of work and needs every interaction to push them toward the content rather than around it. The previous version of DeepDive treated the application as a multi-page progress tracker that contained study material. The v2 specification inverts this: the application is a study reader that contains tracking. The reader is the home page, the default route, and the surface the user spends 95% of their time on.
 
 The principles that govern every decision:
 
@@ -664,4 +664,4 @@ Each phase produces a working, shippable application. Phases are sequential.
 
 The v1 specification (formerly `Project_Reference.md`) has been replaced by this document. The syllabus content from v1 has been extracted to `Syllabus.md`. The application's seed data, hooks, and storage layer are largely retained from v1; the changes specified here are concentrated in the UI layer (the Reader replaces the legacy Study Session and Syllabus pages), the data model extensions for active sessions and notes, and a polished production pass on every surface.
 
-_End of PrepTracker Project Specification v2._
+_End of DeepDive Project Specification v2._

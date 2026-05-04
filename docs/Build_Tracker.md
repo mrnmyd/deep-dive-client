@@ -1,8 +1,8 @@
-# PrepTracker — Build Tracker
+# DeepDive — Build Tracker
 
 **Purpose:** Granular execution log for the v2 rebuild defined in [`Project_Specification.md`](./Project_Specification.md). Every task here is small enough to complete in one focused sitting (target ≤ 2 hours of effective work). Tasks are sequenced so the application remains installable, lintable, and buildable after every checked box.
 
-This document is the operational source of truth while the rebuild is in flight. The specification document tells you _what_ PrepTracker is. This document tells you _what to do next_.
+This document is the operational source of truth while the rebuild is in flight. The specification document tells you _what_ DeepDive is. This document tells you _what to do next_.
 
 ---
 
@@ -53,7 +53,7 @@ Sanity items before starting Phase A.
 
 ### A.2 Duplicate localStorage subscription in `useStreaks`
 
-- [x] **A.2.1** — Read `usePrepTracker.ts:153-156` and document the duplicate subscription path. _(Note: previous `useStreaks` instantiated the entire `useDailyLog` hook just to read the raw map; that re-built today's log derivation, the four mutator closures, and an extra subscription wrapper on every consumer.)_
+- [x] **A.2.1** — Read `useDeepDive.ts:153-156` and document the duplicate subscription path. _(Note: previous `useStreaks` instantiated the entire `useDailyLog` hook just to read the raw map; that re-built today's log derivation, the four mutator closures, and an extra subscription wrapper on every consumer.)_
 - [x] **A.2.2** — Refactor `useStreaks` to read raw `pt_daily_log` directly via `useLocalStorage` and memoise `calculateStreaks(dailyLog)`.
 - [ ] **A.2.3** — Verify by adding a `console.count('daily-log-read')` in `useDailyLog`, mounting the Dashboard, confirming a single read, then removing the count. _(Skipped — refactor is mechanical and reviewed; verification deferred until the Reader is in place.)_
 
@@ -109,9 +109,9 @@ Sanity items before starting Phase A.
 - [x] **B.1.1** — Create `features/preptracker/components/reader/` folder.
 - [x] **B.1.2** — Added `ReaderPage.tsx` with three-pane responsive CSS grid (`280px_1fr_320px` on xl, `280px_1fr` on md, single column below).
 - [x] **B.1.3** — Added `ReaderTopBar.tsx` with disabled search placeholder (Phase C wires it), today minutes pill, streak flame, dashboard/problems/progress quick links, theme toggle, settings icon.
-- [x] **B.1.4** — Wire Reader to `/` in `router.tsx`. Reader is its own root (outside `PrepTrackerLayout`); other routes share `PrepTrackerLayout`.
+- [x] **B.1.4** — Wire Reader to `/` in `router.tsx`. Reader is its own root (outside `DeepDiveLayout`); other routes share `DeepDiveLayout`.
 - [x] **B.1.5** — Legacy redirects added for `/study`, `/syllabus`, `/syllabus/:paperId` → `/`.
-- [x] **B.1.6** — `DashboardPage` now lives at `/dashboard`. `routes.constant.ts` adds `READER` and `DASHBOARD`. `PrepTrackerLayout` nav reduced to Reader / Dashboard / Problems / Progress / Settings (mobile grid changed from 6 → 5).
+- [x] **B.1.6** — `DashboardPage` now lives at `/dashboard`. `routes.constant.ts` adds `READER` and `DASHBOARD`. `DeepDiveLayout` nav reduced to Reader / Dashboard / Problems / Progress / Settings (mobile grid changed from 6 → 5).
 
 ### B.2 Syllabus tree (left pane)
 
@@ -502,8 +502,8 @@ Use this section as a free-form running log. One entry per work session. No temp
 
 - **2026-05-04** — Executed Phase C. Installed `fuse.js`. Added shortcut store + registry hook + parser/matcher (`stores/shortcuts.store.ts`, `hooks/useShortcuts.ts`). Built `AppShortcuts` global listener with chord support (700 ms timeout) and editable-target suppression; mounted at the new `RootLayout` so shortcuts work across all routes. Wired global bindings (`?`, `Mod+k`, `/`, and `g h`/`g d`/`g p`/`g r`/`g s`) and reader bindings (`j`, `k`, `m`, `r`, plus `n`/`t`/`s` Phase-D placeholders). Created shadcn-style Radix `Dialog` wrapper. Built `KeyboardHelpOverlay` (groups bindings by category, renders chord steps as `<kbd>`), `CommandPalette` (Topics / Navigate / Theme / Data with Fuse search + arrow-key navigation + Enter execute), and `GlobalSearch` (top-bar input bound to `/`, popover results, Enter/arrow nav, Esc close). Extracted `topic-actions.ts` so Reader and TopicView share the mark-done logic. Split `RootLayout` into its own file to satisfy `react-refresh/only-export-components`. Refactored several `setState`-in-effect cases to the React 18 "adjust state during render" pattern to satisfy `react-hooks/set-state-in-effect`. Lint/tsc/build all green; main bundle now 631 kB (Phase F.10 will split). Manual smoke + commit pending user.
 
-- **2026-05-04** — Executed Phase B. Restructured router: Reader at `/`, other pages under `PrepTrackerLayout`, legacy `/study` `/syllabus` `/syllabus/:paperId` redirect to `/`. Added `READER` + `DASHBOARD` route constants and reduced sidebar nav to 5 entries. Created reader components: `ReaderPage` (search-param + lastReadTopicId + first-unstarted resume), `ReaderTopBar` (placeholder search, today minutes, streak flame, quick links, theme/settings), `SyllabusTree` (collapsible papers/modules/topics, persisted state in `pt_tree_state`, paper-colour stripes, clickable status badges), `TopicView` (sticky breadcrumb header with paper colour, markdown body, footer with Mark done / Mark for review / Prev / Next, scroll-driven `in_progress` auto-transition at 5%, non-blocking suggestion bar at 90%, empty state), `RightRail` (three collapsible Phase-D placeholder cards with motion-reduce-aware animation). Added `findResumeTopicId`, `findNeighbourTopic`, `sortedTopicsForResume` helpers in `progress.ts`. Deleted legacy `StudySessionPage.tsx` and `SyllabusPage.tsx` (no remaining imports). Updated `DashboardPage` links to point at the Reader. Lint/tsc/build all green. Reader bundle currently in main chunk; phase F.10 will split.
+- **2026-05-04** — Executed Phase B. Restructured router: Reader at `/`, other pages under `DeepDiveLayout`, legacy `/study` `/syllabus` `/syllabus/:paperId` redirect to `/`. Added `READER` + `DASHBOARD` route constants and reduced sidebar nav to 5 entries. Created reader components: `ReaderPage` (search-param + lastReadTopicId + first-unstarted resume), `ReaderTopBar` (placeholder search, today minutes, streak flame, quick links, theme/settings), `SyllabusTree` (collapsible papers/modules/topics, persisted state in `pt_tree_state`, paper-colour stripes, clickable status badges), `TopicView` (sticky breadcrumb header with paper colour, markdown body, footer with Mark done / Mark for review / Prev / Next, scroll-driven `in_progress` auto-transition at 5%, non-blocking suggestion bar at 90%, empty state), `RightRail` (three collapsible Phase-D placeholder cards with motion-reduce-aware animation). Added `findResumeTopicId`, `findNeighbourTopic`, `sortedTopicsForResume` helpers in `progress.ts`. Deleted legacy `StudySessionPage.tsx` and `SyllabusPage.tsx` (no remaining imports). Updated `DashboardPage` links to point at the Reader. Lint/tsc/build all green. Reader bundle currently in main chunk; phase F.10 will split.
 
 ---
 
-_End of PrepTracker Build Tracker._
+_End of DeepDive Build Tracker._

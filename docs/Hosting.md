@@ -1,6 +1,6 @@
-# PrepTracker — Hosting on Vercel
+# DeepDive — Hosting on Vercel
 
-This guide walks through deploying PrepTracker to Vercel from scratch and operating the live deployment afterward. The application is a static client-side SPA (Vite + React + TypeScript) with no backend, no environment variables, and no database. Every piece of user data lives in `localStorage` on the user's machine. That makes Vercel's free Hobby tier more than sufficient.
+This guide walks through deploying DeepDive to Vercel from scratch and operating the live deployment afterward. The application is a static client-side SPA (Vite + React + TypeScript) with no backend, no environment variables, and no database. Every piece of user data lives in `localStorage` on the user's machine. That makes Vercel's free Hobby tier more than sufficient.
 
 This document complements `Project_Specification.md` (§26 Deployment) and `Build_Tracker.md` (Phase G).
 
@@ -35,8 +35,8 @@ This document complements `Project_Specification.md` (§26 Deployment) and `Buil
 
 Before you start, make sure you have:
 
-- **A Vercel account.** Sign up at <https://vercel.com> with your GitHub account so the integration can read your repos. The free Hobby tier is sufficient for PrepTracker.
-- **A GitHub repository for PrepTracker.** This guide assumes the repo is `mrnmyd/deep-dive-client` on GitHub and the `main` branch holds the production code.
+- **A Vercel account.** Sign up at <https://vercel.com> with your GitHub account so the integration can read your repos. The free Hobby tier is sufficient for DeepDive.
+- **A GitHub repository for DeepDive.** This guide assumes the repo is `mrnmyd/deep-dive-client` on GitHub and the `main` branch holds the production code.
 - **A working local build.** Run `npm install && npm run build` once locally to confirm the project builds cleanly before pointing Vercel at it.
 - **Optional but recommended:** a custom domain, if you want to publish at something nicer than `*.vercel.app`.
 
@@ -106,7 +106,7 @@ When the project page loads, Vercel will auto-detect:
 - **Root Directory:** `./` (leave blank)
 - **Build & Output Settings:** auto-filled and correct
 
-You should not need to override any of these for PrepTracker.
+You should not need to override any of these for DeepDive.
 
 ---
 
@@ -129,7 +129,7 @@ If you want to pin Node, set `engines.node` in `package.json`. Skip unless Verce
 
 ## 6. Environment Variables
 
-PrepTracker has zero runtime environment variables. The build does not depend on any. Leave the Environment Variables section empty.
+DeepDive has zero runtime environment variables. The build does not depend on any. Leave the Environment Variables section empty.
 
 If you ever add features that need secrets (analytics IDs, third-party APIs), add them under **Project Settings → Environment Variables** with the appropriate scope (Production / Preview / Development). Always prefix variables intended to reach the browser bundle with `VITE_` so Vite exposes them.
 
@@ -143,7 +143,7 @@ If you ever add features that need secrets (analytics IDs, third-party APIs), ad
    - **Production:** `https://<project>.vercel.app` — this is the canonical URL.
    - **Branch alias:** `https://<project>-git-main-<scope>.vercel.app` — always points at `main`.
    - **Deployment alias:** `https://<project>-<hash>.vercel.app` — pinned to this exact build.
-4. Click any of the URLs to load PrepTracker.
+4. Click any of the URLs to load DeepDive.
 
 You should see the onboarding modal on first visit. Walk through name → daily goal → focus paper. After that, the Reader opens.
 
@@ -264,7 +264,7 @@ The dashboard flow is enough for most cases. If you want CLI control:
    - `vercel` — create a preview deployment of the current directory.
    - `vercel --prod` — deploy to production immediately, bypassing GitHub.
    - `vercel logs <deployment-url>` — fetch build and runtime logs.
-   - `vercel env pull .env.local` — pull environment variables to a local file (PrepTracker has none, so this is a no-op).
+   - `vercel env pull .env.local` — pull environment variables to a local file (DeepDive has none, so this is a no-op).
 
 Use `vercel --prod` only when you need to push a fix without going through Git. The Git flow is the recommended path because it keeps the deployment provenance clean.
 
@@ -312,7 +312,7 @@ Vercel keeps every deployment forever (subject to plan limits), so you can rever
 
 ## 16. Performance Tuning
 
-PrepTracker's bundle is the only meaningful performance variable. After deploy, check Vercel's analytics (if you enabled it) or DevTools' Lighthouse for the production URL. Targets per `Project_Specification.md` §23:
+DeepDive's bundle is the only meaningful performance variable. After deploy, check Vercel's analytics (if you enabled it) or DevTools' Lighthouse for the production URL. Targets per `Project_Specification.md` §23:
 
 - First contentful paint under 1 second on a fast laptop with a warm cache.
 - Under 2 seconds cold.
@@ -332,7 +332,7 @@ The auto-backup feature uses the File System Access API. A few production-specif
 - **Origin scoping.** A folder picked on `localhost:5173` is not the same handle as one picked on `https://your-app.vercel.app`. The first time you visit production, you must re-pick the folder.
 - **HTTPS required.** The File System Access API only works on secure origins. Vercel always serves over HTTPS, so this is automatic in production.
 - **Permission re-grant.** Some browsers re-prompt for folder permission when the tab is reopened cold. The hook handles this transparently — the picker appears, you click "Allow", and the auto-backup resumes.
-- **Folder choice tip.** Pick a synced folder (Dropbox, OneDrive, iCloud Drive, Google Drive desktop) for off-device redundancy. PrepTracker writes a JSON snapshot; the cloud sync handles the rest.
+- **Folder choice tip.** Pick a synced folder (Dropbox, OneDrive, iCloud Drive, Google Drive desktop) for off-device redundancy. DeepDive writes a JSON snapshot; the cloud sync handles the rest.
 - **Firefox / Safari.** No File System Access API. The Settings card shows a polite "Use Export instead" notice. Manual export from the same Settings page still works.
 
 ---
@@ -389,15 +389,15 @@ The auto-backup feature uses the File System Access API. A few production-specif
 
 ## 19. Costs and Quotas
 
-The Hobby (free) tier covers PrepTracker comfortably:
+The Hobby (free) tier covers DeepDive comfortably:
 
 - **Bandwidth:** 100 GB / month — far above what a personal study app generates.
-- **Builds:** ~6000 build minutes / month — at typical PrepTracker build times this allows hundreds of deploys per month.
+- **Builds:** ~6000 build minutes / month — at typical DeepDive build times this allows hundreds of deploys per month.
 - **Deployments:** unlimited.
 - **Custom domains:** unlimited on Hobby.
 - **Team members:** Hobby is single-user. Upgrade to Pro if you want collaborators.
 
-There are no runtime function executions in PrepTracker — it is pure static hosting at the edge, so the serverless function quota does not apply.
+There are no runtime function executions in DeepDive — it is pure static hosting at the edge, so the serverless function quota does not apply.
 
 ---
 

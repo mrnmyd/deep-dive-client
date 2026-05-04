@@ -1,17 +1,17 @@
 # Deep Dive Client Documentation
 
-This directory contains the working documentation for PrepTracker, the product being built on top of the ForgeStack React Template.
+This directory contains the working documentation for DeepDive, the product being built on top of the ForgeStack React Template.
 
 ## Current Template Context
 
-The project is now a React 19, TypeScript, and Vite frontend application using the template's routing, theme, shadcn/Radix UI primitives, reusable form controls, and reusable data table primitives. PrepTracker itself is a localStorage-first study portal: the main workflow is starting a study session, selecting up to 3 modules, studying built-in material, and marking topics complete.
+The project is now a React 19, TypeScript, and Vite frontend application using the template's routing, theme, shadcn/Radix UI primitives, reusable form controls, and reusable data table primitives. DeepDive itself is a localStorage-first study portal: the main workflow is starting a study session, selecting up to 3 modules, studying built-in material, and marking topics complete.
 
 Key areas:
 
 - App composition: `src/app/App.tsx`
 - Router: `src/app/router/router.tsx`
 - Route constants: `src/constants/routes.constant.ts`
-- PrepTracker feature module: `src/features/preptracker`
+- DeepDive feature module: `src/features/preptracker`
 - Editable study content: `src/features/preptracker/content/modules`
 - Public layout: `src/components/layouts/public`
 - Admin layout and menu: `src/components/layouts/admin`
@@ -23,7 +23,7 @@ Key areas:
 - Demo form page: `src/features/form-demo`
 - Demo data table page: `src/features/data-table-demo`
 
-The public/admin/auth/demo template areas remain in the repository as reusable reference material, but the active product route tree now renders PrepTracker pages.
+The public/admin/auth/demo template areas remain in the repository as reusable reference material, but the active product route tree now renders DeepDive pages.
 
 ## Study Content
 

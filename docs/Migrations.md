@@ -1,6 +1,6 @@
-# PrepTracker — Storage Schema Migrations
+# DeepDive — Storage Schema Migrations
 
-All localStorage data exported by PrepTracker carries a `schemaVersion` integer. On import, `src/features/preptracker/utils/migrations.ts` runs a step ladder that brings older backups up to the current schema before any keys are written. Backups newer than the running app are rejected with a clear error.
+All localStorage data exported by DeepDive carries a `schemaVersion` integer. On import, `src/features/preptracker/utils/migrations.ts` runs a step ladder that brings older backups up to the current schema before any keys are written. Backups newer than the running app are rejected with a clear error.
 
 The current schema version is defined as `SCHEMA_VERSION` in `src/features/preptracker/utils/storage.ts`.
 
@@ -17,7 +17,7 @@ The current schema version is defined as `SCHEMA_VERSION` in `src/features/prept
 
 ## Validation rules
 
-- An imported file must have `app === "PrepTracker"`, a string `exportedAt`, an object `data`, and an optional numeric `schemaVersion`.
+- An imported file must have `app === "DeepDive"`, a string `exportedAt`, an object `data`, and an optional numeric `schemaVersion`.
 - A missing `schemaVersion` is treated as version 1 to support the v1 export format that predates the field.
 - A `schemaVersion > SCHEMA_VERSION` is rejected.
 - A failed migration leaves localStorage untouched.

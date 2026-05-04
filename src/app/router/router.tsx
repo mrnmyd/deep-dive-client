@@ -2,23 +2,23 @@ import { Suspense, lazy } from 'react'
 import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { ROUTES } from '@/constants/routes.constant'
 import { RootLayout } from '@/app/router/RootLayout'
-import { ReaderPage } from '@/features/preptracker/components/reader/ReaderPage'
-import { PrepTrackerLayout } from '@/features/preptracker/components/preptracker-layout'
+import { ReaderPage } from '@/features/deepdive/components/reader/ReaderPage'
+import { DeepDiveLayout } from '@/features/deepdive/components/deepdive-layout'
 import NotFoundPage from '@/pages/NotFoundPage'
 
 const DashboardPage = lazy(() =>
-  import('@/features/preptracker/pages/DashboardPage').then((mod) => ({
+  import('@/features/deepdive/pages/DashboardPage').then((mod) => ({
     default: mod.DashboardPage,
   }))
 )
 const ProblemsPage = lazy(() =>
-  import('@/features/preptracker/pages/ProblemsPage').then((mod) => ({ default: mod.ProblemsPage }))
+  import('@/features/deepdive/pages/ProblemsPage').then((mod) => ({ default: mod.ProblemsPage }))
 )
 const ProgressPage = lazy(() =>
-  import('@/features/preptracker/pages/ProgressPage').then((mod) => ({ default: mod.ProgressPage }))
+  import('@/features/deepdive/pages/ProgressPage').then((mod) => ({ default: mod.ProgressPage }))
 )
 const SettingsPage = lazy(() =>
-  import('@/features/preptracker/pages/SettingsPage').then((mod) => ({ default: mod.SettingsPage }))
+  import('@/features/deepdive/pages/SettingsPage').then((mod) => ({ default: mod.SettingsPage }))
 )
 
 const fallback = (label: string) => (
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     children: [
       { path: ROUTES.READER, element: <ReaderPage /> },
       {
-        element: <PrepTrackerLayout />,
+        element: <DeepDiveLayout />,
         children: [
           {
             path: ROUTES.DASHBOARD,

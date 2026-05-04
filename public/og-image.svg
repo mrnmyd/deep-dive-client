@@ -12,7 +12,7 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   <rect x="80" y="120" width="80" height="8" rx="4" fill="url(#accent)"/>
-  <text x="80" y="240" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="92" font-weight="700" fill="#F8FAFC" letter-spacing="-2">PrepTracker</text>
+  <text x="80" y="240" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="92" font-weight="700" fill="#F8FAFC" letter-spacing="-2">DeepDive</text>
   <text x="80" y="320" font-family="ui-serif, Georgia, serif" font-size="42" font-style="italic" fill="#CBD5E1">A reader-first study portal.</text>
   <text x="80" y="380" font-family="ui-serif, Georgia, serif" font-size="32" fill="#94A3B8">Syllabus. DSA. Sessions. Progress. All local.</text>
   <g transform="translate(80,470)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="500">

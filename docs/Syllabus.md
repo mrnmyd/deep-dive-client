@@ -1,4 +1,4 @@
-# PrepTracker — Syllabus
+# DeepDive — Syllabus
 
 This document is the authoritative source for study content scope. It defines all five papers, their modules, and topics, plus the seeded DSA problem list. The application's syllabus seed data (`src/features/preptracker/data/syllabus.ts`) and the per-module markdown files (`src/features/preptracker/content/modules/{moduleId}.md`) must align with this document.
 

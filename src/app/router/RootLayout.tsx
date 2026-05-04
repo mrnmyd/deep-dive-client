@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { toast } from 'sonner'
-import { AppShortcuts } from '@/features/preptracker/components/reader/AppShortcuts'
-import { OnboardingModal } from '@/features/preptracker/components/reader/OnboardingModal'
-import { ErrorBoundary } from '@/features/preptracker/components/shared/ErrorBoundary'
+import { AppShortcuts } from '@/features/deepdive/components/reader/AppShortcuts'
+import { OnboardingModal } from '@/features/deepdive/components/reader/OnboardingModal'
+import { ErrorBoundary } from '@/features/deepdive/components/shared/ErrorBoundary'
 
 export function RootLayout() {
   useEffect(() => {
@@ -19,8 +19,8 @@ export function RootLayout() {
         duration: Infinity,
       })
     }
-    window.addEventListener('preptracker-storage-error', handler)
-    return () => window.removeEventListener('preptracker-storage-error', handler)
+    window.addEventListener('deepdive-storage-error', handler)
+    return () => window.removeEventListener('deepdive-storage-error', handler)
   }, [])
 
   return (
