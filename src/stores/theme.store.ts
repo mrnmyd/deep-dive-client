@@ -1,0 +1,22 @@
+// /store/theme-store.ts
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
+
+export type Theme = "light" | "dark" | "system"
+
+type ThemeState = {
+    theme: Theme
+    setTheme: (theme: Theme) => void
+}
+
+export const useThemeStore = create<ThemeState>()(
+    persist(
+        (set) => ({
+            theme: "system",
+            setTheme: (theme) => set({ theme }),
+        }),
+        {
+            name: "app-theme",
+        }
+    )
+)
