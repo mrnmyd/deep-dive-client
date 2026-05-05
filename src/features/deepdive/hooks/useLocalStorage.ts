@@ -1,13 +1,18 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { readStorage, writeStorage } from '@/features/deepdive/utils/storage'
 
 type SetValue<T> = T | ((previous: T) => T)
 
 export function useLocalStorage<T>(key: string, defaultValue: T) {
   const [value, setValue] = useState<T>(() => readStorage(key, defaultValue))
+  const valueRef = useRef(value)
 
   useEffect(() => {
-    const syncValue = () => setValue(readStorage(key, defaultValue))
+    const syncValue = () => {
+      const next = readStorage(key, defaultValue)
+      valueRef.current = next
+      setValue(next)
+    }
 
     window.addEventListener('storage', syncValue)
     window.addEventListener('deepdive-storage', syncValue)
@@ -20,12 +25,12 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
 
   const setStoredValue = useCallback(
     (nextValue: SetValue<T>) => {
-      setValue((previous) => {
-        const resolved = nextValue instanceof Function ? nextValue(previous) : nextValue
-        if (Object.is(resolved, previous)) return previous
-        writeStorage(key, resolved)
-        return resolved
-      })
+      const previous = valueRef.current
+      const resolved = nextValue instanceof Function ? nextValue(previous) : nextValue
+      if (Object.is(resolved, previous)) return
+      valueRef.current = resolved
+      setValue(resolved)
+      writeStorage(key, resolved)
     },
     [key]
   )

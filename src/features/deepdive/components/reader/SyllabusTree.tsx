@@ -119,7 +119,7 @@ export function SyllabusTree({ currentTopicId, onSelect }: SyllabusTreeProps) {
                         </button>
 
                         {moduleOpen && (
-                          <ul className="mt-1 space-y-0.5 pl-5">
+                          <ul className="mt-1 space-y-1 pl-5">
                             {module.topics.map((topic) => {
                               const status = topicProgress.getTopicStatus(topic.id)
                               const active = topic.id === currentTopicId
@@ -135,7 +135,7 @@ export function SyllabusTree({ currentTopicId, onSelect }: SyllabusTreeProps) {
                                     <button
                                       type="button"
                                       onClick={() => onSelect(topic.id)}
-                                      className="flex flex-1 items-start gap-2 py-1.5 text-left"
+                                      className="flex flex-1 items-start gap-2 py-1.5 text-left overflow-hidden"
                                     >
                                       <span
                                         className={cn(
