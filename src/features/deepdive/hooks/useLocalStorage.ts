@@ -22,6 +22,7 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
     (nextValue: SetValue<T>) => {
       setValue((previous) => {
         const resolved = nextValue instanceof Function ? nextValue(previous) : nextValue
+        if (Object.is(resolved, previous)) return previous
         writeStorage(key, resolved)
         return resolved
       })

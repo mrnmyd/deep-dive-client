@@ -42,11 +42,8 @@ export function RelatedProblems({ topicId, variant = 'inline' }: RelatedProblems
           const status = tracker.getProblemStatus(problem.id)
           const progress = tracker.progress[problem.id]
           return (
-            <li
-              key={problem.id}
-              className="flex flex-col gap-2 rounded-md border bg-background p-3 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div className="min-w-0 flex-1">
+            <li key={problem.id} className="space-y-2 rounded-md border bg-background p-3">
+              <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{problem.title}</p>
                 <p className="text-xs text-muted-foreground">
                   {problem.pattern} · Week {problem.week}

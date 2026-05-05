@@ -80,11 +80,13 @@ function RailCard({ icon, title, defaultOpen = false, controlled, children }: Ra
       </button>
       <div
         className={cn(
-          'overflow-hidden transition-[max-height] duration-200 motion-reduce:transition-none',
-          open ? 'max-h-[40rem]' : 'max-h-0'
+          'grid transition-[grid-template-rows] duration-200 motion-reduce:transition-none',
+          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         )}
       >
-        <div className="px-3 pb-3 pt-1">{children}</div>
+        <div className="min-h-0 overflow-hidden">
+          <div className="px-3 pb-3 pt-1">{children}</div>
+        </div>
       </div>
     </section>
   )
