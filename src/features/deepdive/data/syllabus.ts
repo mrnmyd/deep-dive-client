@@ -149,6 +149,13 @@ export const syllabus: Paper[] = [
             'high',
             3
           ),
+          topic(
+            'topic_probabilistic_ds',
+            'Probabilistic data structures: Bloom filter, Count-Min sketch, HyperLogLog, MinHash, LSH',
+            ['bloom-filter', 'probabilistic'],
+            'medium',
+            4
+          ),
         ],
       },
     ],
@@ -268,6 +275,33 @@ export const syllabus: Paper[] = [
           ),
         ],
       },
+      {
+        id: 'module_2_5_security',
+        title: 'Security',
+        topics: [
+          topic(
+            'topic_owasp_top10',
+            'OWASP Top 10: XSS, CSRF, SQLi, IDOR, SSRF, broken auth, security misconfiguration',
+            ['security', 'owasp'],
+            'high',
+            5
+          ),
+          topic(
+            'topic_crypto_basics',
+            'Cryptography basics: hashing, signing, TLS handshake, symmetric vs asymmetric, encryption at rest',
+            ['security', 'cryptography'],
+            'high',
+            4
+          ),
+          topic(
+            'topic_secure_coding',
+            'Secure coding: input validation, output encoding, secret management, dependency scanning',
+            ['security', 'secure-coding'],
+            'high',
+            4
+          ),
+        ],
+      },
     ],
   },
   {
@@ -344,6 +378,26 @@ export const syllabus: Paper[] = [
           ),
         ],
       },
+      {
+        id: 'module_3_4_quality',
+        title: 'Quality & Browser Internals',
+        topics: [
+          topic(
+            'topic_accessibility',
+            'Accessibility: WCAG, ARIA, semantic HTML, keyboard navigation, screen readers',
+            ['a11y', 'accessibility'],
+            'high',
+            4
+          ),
+          topic(
+            'topic_browser_internals',
+            'Browser internals: rendering pipeline, event loop, V8, web APIs, paint and layout',
+            ['browser', 'rendering'],
+            'high',
+            4
+          ),
+        ],
+      },
     ],
   },
   {
@@ -376,6 +430,13 @@ export const syllabus: Paper[] = [
             'Communication: REST vs GraphQL, gRPC, WebSockets, message queues',
             ['api', 'kafka'],
             'high',
+            4
+          ),
+          topic(
+            'topic_networking_deep',
+            'Networking deep dive: TLS handshake, HTTP/3 + QUIC, TCP slow-start, BGP routing',
+            ['networking', 'tls', 'http3'],
+            'medium',
             4
           ),
         ],
@@ -466,6 +527,13 @@ export const syllabus: Paper[] = [
             ['system-design', 'walkthrough'],
             'medium',
             3
+          ),
+          topic(
+            'topic_payments_deep',
+            'Walkthrough: payments system (idempotency, double-charge, saga, refund, reconciliation)',
+            ['system-design', 'payments', 'idempotency'],
+            'high',
+            4
           ),
         ],
       },
@@ -566,6 +634,28 @@ export const syllabus: Paper[] = [
             ['behavioral', 'growth'],
             'medium',
             2
+          ),
+        ],
+      },
+    ],
+  },
+  {
+    id: 'paper_7_systems_fundamentals',
+    title: 'Systems Fundamentals',
+    subtitle: 'The Foundations Layer',
+    priority: 4,
+    color: 'gray',
+    modules: [
+      {
+        id: 'module_7_1_os',
+        title: 'Operating Systems',
+        topics: [
+          topic(
+            'topic_os_fundamentals',
+            'OS fundamentals: processes vs threads, virtual memory, paging, scheduling, context switches, IPC',
+            ['os', 'operating-systems'],
+            'high',
+            5
           ),
         ],
       },
