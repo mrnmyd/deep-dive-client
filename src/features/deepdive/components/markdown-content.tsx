@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
 import { Check, Copy, Link2 } from 'lucide-react'
+import { MermaidBlock } from '@/features/deepdive/components/mermaid-block'
 import { cn } from '@/lib/utils'
 import 'highlight.js/styles/github-dark.css'
 
@@ -91,6 +92,10 @@ function CodeBlock({ inline, className, children, ...rest }: CodeProps) {
         {children}
       </code>
     )
+  }
+
+  if (className === 'language-mermaid') {
+    return <MermaidBlock code={text.trim()} />
   }
 
   return (

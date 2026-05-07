@@ -1,5 +1,18 @@
 {
   "permissions": {
-    "allow": ["Bash(npx tsc *)", "Bash(git checkout *)", "Bash(npm run *)", "Bash(npm install *)"]
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(git checkout *)",
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(mkdir -p scripts)",
+      "Bash(mkdir -p src/features/deepdive/content/topics)",
+      "Bash(mkdir -p src/features/deepdive/content/supplements)",
+      "Bash(node *)",
+      "Bash(awk '/^## Greedy:/,/^## [^G]|^---/' src/features/deepdive/content/modules/module_1_4_advanced.md)",
+      "Bash(git rm *)",
+      "Bash(npx eslint *)",
+      "Bash(npm i *)"
+    ]
   }
 }

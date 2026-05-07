@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, BookmarkCheck, CheckCircle2, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookmarkCheck, CheckCircle2, ChevronDown, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { syllabus } from '@/features/deepdive/data/syllabus'
 import { MarkdownContent } from '@/features/deepdive/components/markdown-content'
@@ -8,7 +8,7 @@ import { useDailyLog, useTopicProgress } from '@/features/deepdive/hooks/useDeep
 import { allTopics, findNeighbourTopic } from '@/features/deepdive/utils/progress'
 import { paperColorTokens } from '@/features/deepdive/utils/paper-color'
 import { topicTone } from '@/features/deepdive/utils/status-styles'
-import { getModuleStudyGuide } from '@/features/deepdive/utils/study-content'
+import { getModuleSupplement, getTopicStudyGuide } from '@/features/deepdive/utils/study-content'
 import { markTopicDone, markTopicReview } from '@/features/deepdive/utils/topic-actions'
 import { RelatedProblems } from '@/features/deepdive/components/reader/RelatedProblems'
 import { cn } from '@/lib/utils'
@@ -44,9 +44,11 @@ export function TopicView({ topicId, onNavigate }: TopicViewProps) {
 
   const status = topic ? topicProgress.getTopicStatus(topic.id) : 'not_started'
   const tokens = paper ? paperColorTokens[paper.color] : null
-  const markdown = useMemo(() => (module ? getModuleStudyGuide(module.id) : ''), [module])
+  const markdown = useMemo(() => (topic ? getTopicStudyGuide(topic.id) : ''), [topic])
+  const supplement = useMemo(() => (module ? getModuleSupplement(module.id) : null), [module])
   const previous = useMemo(() => (topic ? findNeighbourTopic(topic.id, -1) : undefined), [topic])
   const next = useMemo(() => (topic ? findNeighbourTopic(topic.id, +1) : undefined), [topic])
+  const [supplementOpen, setSupplementOpen] = useState(false)
 
   useEffect(() => {
     scrollContainerRef.current?.scrollTo({ top: 0 })
@@ -137,6 +139,38 @@ export function TopicView({ topicId, onNavigate }: TopicViewProps) {
         </header>
 
         <MarkdownContent content={markdown} />
+
+        {supplement && (
+          <section className="mt-10 rounded-lg border bg-muted/30">
+            <button
+              type="button"
+              onClick={() => setSupplementOpen((open) => !open)}
+              className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium"
+              aria-expanded={supplementOpen}
+            >
+              <span>Module-wide notes — {module.title}</span>
+              <ChevronDown
+                className={cn(
+                  'h-4 w-4 transition-transform duration-200 motion-reduce:transition-none',
+                  supplementOpen && 'rotate-180'
+                )}
+                aria-hidden
+              />
+            </button>
+            <div
+              className={cn(
+                'grid transition-[grid-template-rows] duration-200 motion-reduce:transition-none',
+                supplementOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+              )}
+            >
+              <div className="min-h-0 overflow-hidden">
+                <div className="border-t px-4 py-4">
+                  <MarkdownContent content={supplement} />
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         <RelatedProblems topicId={topic.id} variant="inline" />
 
