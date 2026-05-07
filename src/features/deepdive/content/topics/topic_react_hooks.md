@@ -120,7 +120,7 @@ useEffect(() => { stableHandler.current = handler })
 
 When state has many fields and transitions, a reducer is clearer than many `useState` calls.
 
-```jsx
+```tsx
 type State = { items: Item[]; status: 'idle' | 'loading' | 'error' }
 type Action =
   | { type: 'fetch_started' }
@@ -129,9 +129,12 @@ type Action =
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'fetch_started':   return { ...state, status: 'loading' }
-    case 'fetch_succeeded': return { items: action.items, status: 'idle' }
-    case 'fetch_failed':    return { ...state, status: 'error' }
+    case 'fetch_started':
+      return { ...state, status: 'loading' }
+    case 'fetch_succeeded':
+      return { items: action.items, status: 'idle' }
+    case 'fetch_failed':
+      return { ...state, status: 'error' }
   }
 }
 
@@ -144,11 +147,12 @@ The reducer is a **pure function**: same inputs, same output. Easy to test in is
 
 Context lets a value travel from a provider to any descendant without prop-drilling.
 
-```jsx
-const ThemeContext = (createContext < 'light') | ('dark' > 'light')
+```tsx
+type Theme = 'light' | 'dark'
+const ThemeContext = createContext<Theme>('light')
 
 function App() {
-  const [theme, setTheme] = (useState < 'light') | ('dark' > 'light')
+  const [theme, setTheme] = useState<Theme>('light')
   return (
     <ThemeContext.Provider value={theme}>
       <Toolbar />

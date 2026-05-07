@@ -173,11 +173,12 @@ It is **not** great for:
 - Frequently-changing state (cart with many items, hover state, scroll position) — every consumer re-renders on any value change.
 - Cross-tree shared mutable data with selectors.
 
-```jsx
-const ThemeContext = (createContext < 'light') | ('dark' > 'light')
+```tsx
+type Theme = 'light' | 'dark'
+const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void } | null>(null)
 
 function App() {
-  const [theme, setTheme] = useState('light')
+  const [theme, setTheme] = useState<Theme>('light')
   const value = useMemo(() => ({ theme, setTheme }), [theme]) // stable reference
   return (
     <ThemeContext.Provider value={value}>
